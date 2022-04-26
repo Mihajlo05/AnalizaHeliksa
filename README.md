@@ -2,7 +2,7 @@
  
  Sve korisne formule se mogu naći na https://en.wikipedia.org/wiki/Magnetic_moment
  
- KADA JE MAGNETNO POLJE HOMOGENO, POSTOJI SAMO MOMENT SILE NA DIPOLE, ALI POSTOJI
+ KADA JE MAGNETNO POLJE HOMOGENO, POSTOJI SAMO MOMENT SILE NA DIPOLE, ZATO ŠTO JE GRADIJENT MAGNETNOG POLJA JEDNAKO 0
  
  Prvo ću da probam da napravim simulaciju gde se jedan heliks nalazi u magnetnom polju drugog heliksa, jer me mrzi sad da radim u homogenom magnetnom polju, a ovo zvuči mnogo kul.
  
