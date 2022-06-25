@@ -1,19 +1,25 @@
-classdef dipole
+classdef Dipole
     %This class represents dipole in physical world
     %it's defined by it's magnetic dipole moment
-    %and holds info like it's position and velocity
+    %and holds info about it's transformation and velocity
     
     properties
         moment
         position
-        velocity = [0, 0, 0]
+        orientation
+        velocity = [0 0 0]
+        radius = 1
     end
     
     methods
-        function obj = dipole(moment, position)
+        function obj = Dipole(moment, position, orientation)
             obj.moment = moment;
             obj.position = position;
+            obj.orientation = orientation;
+        end
+        
+        function speed = get_speed(obj)
+            speed = vec_intensity(obj.velocity);
         end
     end
 end
-
