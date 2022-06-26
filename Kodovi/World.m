@@ -15,9 +15,25 @@ classdef World
             obj.n_iterations = n_iterations;
         end
         
-        function ob = add_dipole(obj, dip)
+        function this = add_dipole(obj, dip)
             obj.dipoles = [obj.dipoles, dip];
-            ob = obj;
+            this = obj;
+        end
+        
+        function this = update(obj)
+            for i = 1:length(obj.dipoles)
+               obj.dipoles(i) = obj.dipoles(i).update(obj.dt); 
+            end
+            
+            this = obj;
+        end
+        
+        function this = run_simulation(obj)
+            for i = 1:obj.n_iterations
+                obj = obj.update();
+            end
+            
+            this = obj;
         end
     end
 end
