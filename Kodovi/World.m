@@ -18,6 +18,24 @@ classdef World
             
             this = obj;
         end
+        
+        function data = run_simulation(obj, dt, n)
+            data = struct;
+            
+            data.time_data = [];
+            data.time_data.dipoles = obj.dipoles;
+            data.time_data.time = obj.time;
+            
+            for i = 1:n
+                obj = obj.update(dt);
+                
+                td = struct;
+                td.dipoles = obj.dipoles;
+                td.time = obj.time;
+                
+                data.time_data = [data.time_data, td];
+            end
+        end
     end
 end
 
