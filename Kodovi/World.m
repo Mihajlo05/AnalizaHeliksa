@@ -6,6 +6,9 @@ classdef World
     properties
         dipoles = []
         time = 0
+        
+        dip_radius = 1;
+        dip_moment = 1;
     end
     
     methods
@@ -22,19 +25,18 @@ classdef World
         function data = run_simulation(obj, dt, n)
             data = struct;
             
-            data.time_data = [];
-            data.time_data.dipoles = obj.dipoles;
-            data.time_data.time = obj.time;
+            data.dipoles = obj.dipoles;
+            data.time = obj.time;
             
             for i = 1:n
                 obj = obj.update(dt);
                 
-                td = struct;
-                td.dipoles = obj.dipoles;
-                td.time = obj.time;
-                
-                data.time_data = [data.time_data, td];
+                data.dipoles = [data.dipoles, obj.dipoles];
+                data.time = [data.time, obj.time];
             end
+            
+            data.dip_radius = obj.dip_radius;
+            data.dip_moment = obj.dip_moment;
         end
     end
 end

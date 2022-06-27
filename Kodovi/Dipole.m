@@ -8,8 +8,6 @@ classdef Dipole
         orientation
         vel = [0 0 0]
         ang_vel = [0 0 0]
-        moment = 1
-        radius = 1
     end
     
     methods
