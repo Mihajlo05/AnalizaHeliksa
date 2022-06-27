@@ -5,33 +5,16 @@ classdef World
     
     properties
         dipoles = []
-        dt %timestep
-        n_iterations
+        time = 0
     end
     
     methods
-        function obj = World(dt, n_iterations)
-            obj.dt = dt;
-            obj.n_iterations = n_iterations;
-        end
-        
-        function this = add_dipole(obj, dip)
-            obj.dipoles = [obj.dipoles, dip];
-            this = obj;
-        end
-        
-        function this = update(obj)
+        function this = update(obj, dt)
             for i = 1:length(obj.dipoles)
-               obj.dipoles(i) = obj.dipoles(i).update(obj.dt); 
+               obj.dipoles(i) = obj.dipoles(i).update(dt); 
             end
             
-            this = obj;
-        end
-        
-        function this = run_simulation(obj)
-            for i = 1:obj.n_iterations
-                obj = obj.update();
-            end
+            obj.time = obj.time + dt;
             
             this = obj;
         end

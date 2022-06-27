@@ -4,29 +4,24 @@ classdef Dipole
     %and holds info about it's transformation and velocity
     
     properties
-        moment
         position
         orientation
-        velocity = [0 0 0]
-        %Seperated angular speed and direction
-        %instead of using a vector whose intensity i it's speed
-        %because of some quaternion stuff and optimisation
-        angular_speed = 0
-        angular_vel_dir = [1 0 0]
+        vel = [0 0 0]
+        ang_vel = [0 0 0]
+        moment = 1
         radius = 1
     end
     
     methods
-        function obj = Dipole(moment, position, orientation)
-            obj.moment = moment;
+        function obj = Dipole(position, orientation)
             obj.position = position;
             obj.orientation = orientation;
         end
         
         function this = update(obj, dt)
-            obj.position = obj.position + obj.velocity * dt;
+            obj.position = obj.position + obj.vel * dt;
             
-            q = rot_quat(obj.angular_vel_dir, obj.angular_speed * dt);
+            q = quaternion(obj.ang_vel * dt, 'rotvec');
             obj.orientation = rotatepoint(q, obj.orientation);
             
             this = obj;
