@@ -4,25 +4,17 @@ classdef Dipole
     %and holds info about it's transformation and velocity
     
     properties
-        position
-        orientation
+        pos
+        %FORGET ABOUT ROTATION FOR NOW
         vel = [0 0 0]
         ang_vel = [0 0 0]
+        acc = [0 0 0]
+        ang_acc = [0 0 0]
     end
     
     methods
-        function obj = Dipole(position, orientation)
-            obj.position = position;
-            obj.orientation = orientation;
-        end
-        
-        function this = update(obj, dt)
-            obj.position = obj.position + obj.vel * dt;
-            
-            q = quaternion(obj.ang_vel * dt, 'rotvec');
-            obj.orientation = rotatepoint(q, obj.orientation);
-            
-            this = obj;
+        function obj = Dipole(pos)
+            obj.pos = pos;
         end
     end
 end
