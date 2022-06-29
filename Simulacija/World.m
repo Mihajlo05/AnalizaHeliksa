@@ -29,10 +29,23 @@ classdef World
             n = length(obj.dpls);
             
             for i = 1:n
-                obj.dpls(i).pos = obj.dpls(i).pos + obj.dpls(i).vel*dt + 0.5*obj.dpls(i).acc*dt*dt;
+                pos = obj.dpls(i).pos;
+                vel = obj.dpls(i).vel;
+                acc = obj.dpls(i).acc;
+                
+                obj.dpls(i).pos = pos + vel*dt + 0.5*acc*dt*dt;
+                
+                ori = obj.dpls(i).ori;
+                avel = obj.dpls(i).ang_vel;
+                aacc = obj.dpls(i).ang_acc;
+                
+                q = quaternion(avel*dt + 0.5*aacc*dt*dt, 'rotvec');
+                
+                obj.dpls(i).ori = rotatepoint(q, ori);
             end
             
             new_accs = zeros(n, 3);
+            new_ang_accs = zeros(n, 3);
             
             %HERE SHOULD NE A FUNCTION FOR CALCULATING NEW ACCELERATIONG
             %BASED ON MAGNETIC FIELD, DIPOLE-DIPOLE INTERACTIONS AND
@@ -41,23 +54,33 @@ classdef World
                 new_accs(i, 1) = obj.dpls(i).acc(1);
                 new_accs(i, 2) = obj.dpls(i).acc(2);
                 new_accs(i, 3) = obj.dpls(i).acc(3);
+                
+                new_ang_accs(i, 1) = obj.dpls(i).ang_acc(1);
+                new_ang_accs(i, 2) = obj.dpls(i).ang_acc(2);
+                new_ang_accs(i, 3) = obj.dpls(i).ang_acc(3);
             end
             
             for i = 1:n
                 new_acc = [new_accs(i, 1), new_accs(i, 2), new_accs(i, 3)];
-                obj.dpls(i).vel = obj.dpls(i).vel + 0.5*(obj.dpls(i).acc + new_acc)*dt;
+                acc = obj.dpls(i).acc;
+                vel = obj.dpls(i).vel;
+                
+                obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
                 obj.dpls(i).acc = new_acc;
+                
+                new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
+                aacc = obj.dpls(i).ang_acc;
+                avel = obj.dpls(i).ang_vel;
+                
+                obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
             end
-            
-            %WARNING: THIS FUNCTION CURENTLY ONLY UPDATES TIME, POSITION
-            %AND VELOCITY
             
             obj.time = obj.time + dt;
             
             this = obj;
         end
         
-        function data = run_sim(obj, dt, n)
+        function data = simulate(obj, dt, n)
             obj = obj.init_sim(); %initialize all of the forces at t = 0
             
             data = struct; %memorizing all of the data created by 
