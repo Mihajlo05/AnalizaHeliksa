@@ -7,9 +7,7 @@ classdef Dipole
         pos
         %FORGET ABOUT ROTATION FOR NOW
         vel = [0 0 0]
-        ang_vel = [0 0 0]
         acc = [0 0 0]
-        ang_acc = [0 0 0]
     end
     
     methods
