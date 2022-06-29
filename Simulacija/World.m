@@ -100,6 +100,7 @@ classdef World
             
             data.dpl_r = obj.dpl_r;
             data.dpl_moment = obj.dpl_moment;
+            data.dpl_mass = obj.dpl_mass;
         end
     end
 end
