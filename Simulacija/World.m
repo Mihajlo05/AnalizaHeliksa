@@ -26,8 +26,31 @@ classdef World
             %UPDATE ALL OF THE POSITIONS, VELOCITIES, ACCELERATIONS,
             %ROTATIONS, ANGULAR VELOCITIES and ANGULAR ACCELERATIONS
             
-            %WARNING: THIS FUNCTION CURENTLY ONLY UPDATES TIME, AND NONE OF
-            %THE ABOVE
+            n = length(obj.dpls);
+            
+            for i = 1:n
+                obj.dpls(i).pos = obj.dpls(i).pos + obj.dpls(i).vel*dt + 0.5*obj.dpls(i).acc*dt*dt;
+            end
+            
+            new_accs = zeros(n, 3);
+            
+            %HERE SHOULD NE A FUNCTION FOR CALCULATING NEW ACCELERATIONG
+            %BASED ON MAGNETIC FIELD, DIPOLE-DIPOLE INTERACTIONS AND
+            %LENNARD-JONES POTENTIAL
+            for i = 1:n
+                new_accs(i, 1) = obj.dpls(i).acc(1);
+                new_accs(i, 2) = obj.dpls(i).acc(2);
+                new_accs(i, 3) = obj.dpls(i).acc(3);
+            end
+            
+            for i = 1:n
+                new_acc = [new_accs(i, 1), new_accs(i, 2), new_accs(i, 3)];
+                obj.dpls(i).vel = obj.dpls(i).vel + 0.5*(obj.dpls(i).acc + new_acc)*dt;
+                obj.dpls(i).acc = new_acc;
+            end
+            
+            %WARNING: THIS FUNCTION CURENTLY ONLY UPDATES TIME, POSITION
+            %AND VELOCITY
             
             obj.time = obj.time + dt;
             
@@ -38,7 +61,7 @@ classdef World
             obj = obj.init_sim(); %initialize all of the forces at t = 0
             
             data = struct; %memorizing all of the data created by 
-            %simulation in one struct (this includes every dipoles at
+            %simulation in one struct (this includes every dipole at
             %each point in time, basically memorizing all of the history
             %of the world)
             
