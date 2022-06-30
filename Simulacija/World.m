@@ -10,16 +10,45 @@ classdef World
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
+        e = 1 %depth of the potential well in lennard-jones potential
     end
     
     methods
-        function this = init_sim(obj)
-            %this function calculates all of the forces at t = 0
-            %call this before calling first update on the world
+        function [force1, force2] = lj_force(obj, dpl1, dpl2)
+            r = dpl2.pos - dpl1.pos;
+            dist = sqrt(r(1)^2 + r(2)^2 + r(3)^2);
+            dir = r / dist;
             
-            %WARNING: THIS FUNCTION CURRENTLY DOES NOTHING
+            if dist < 2^(1/6)*obj.dpl_r
+                F = 4*obj.e*( (12*(obj.dpl_r^12)/dist^13) + (6*(obj.dpl_r^6)/dist^7));
+                force1 = -F*dir;
+                force2 = F*dir;
+            else
+                force1 = [0 0 0];
+                force2 = [0 0 0];
+            end
+        end
+        
+        function [new_accs, new_ang_accs] = calc_forces(obj)
+            n = length(obj.dpls);
             
-            this = obj;
+            new_accs = zeros(n, 3);
+            new_ang_accs = zeros(n, 3);
+            
+            for i = 1:n
+                for j = (i+1):n
+                    [lj1, lj2] = obj.lj_force(obj.dpls(i), obj.dpls(j));
+                    
+                    for k = 1:3
+                        new_accs(i, k) = new_accs(i, k) + lj1(k);
+                        new_accs(j, k) = new_accs(j, k) + lj2(k);
+                    end
+                end
+                
+                for k = 1:3
+                    new_ang_accs(i, k) = obj.dpls(i).ang_acc(k);
+                end
+            end
         end
         
         function this = update(obj, dt)
@@ -44,21 +73,7 @@ classdef World
                 obj.dpls(i).ori = rotatepoint(q, ori);
             end
             
-            new_accs = zeros(n, 3);
-            new_ang_accs = zeros(n, 3);
-            
-            %HERE SHOULD NE A FUNCTION FOR CALCULATING NEW ACCELERATIONG
-            %BASED ON MAGNETIC FIELD, DIPOLE-DIPOLE INTERACTIONS AND
-            %LENNARD-JONES POTENTIAL
-            for i = 1:n
-                new_accs(i, 1) = obj.dpls(i).acc(1);
-                new_accs(i, 2) = obj.dpls(i).acc(2);
-                new_accs(i, 3) = obj.dpls(i).acc(3);
-                
-                new_ang_accs(i, 1) = obj.dpls(i).ang_acc(1);
-                new_ang_accs(i, 2) = obj.dpls(i).ang_acc(2);
-                new_ang_accs(i, 3) = obj.dpls(i).ang_acc(3);
-            end
+            [new_accs, new_ang_accs] = obj.calc_forces();
             
             for i = 1:n
                 new_acc = [new_accs(i, 1), new_accs(i, 2), new_accs(i, 3)];
@@ -81,7 +96,14 @@ classdef World
         end
         
         function data = simulate(obj, dt, n)
-            obj = obj.init_sim(); %initialize all of the forces at t = 0
+            [accs, ang_accs] = obj.calc_forces();
+            
+            for i = 1:length(obj.dpls)
+                for k = 1:3
+                    obj.dpls(i).acc(k) = accs(i, k);
+                    obj.dpls(i).ang_acc(k) = ang_accs(i, k);
+                end
+            end
             
             data = struct; %memorizing all of the data created by 
             %simulation in one struct (this includes every dipole at
@@ -101,6 +123,7 @@ classdef World
             data.dpl_r = obj.dpl_r;
             data.dpl_moment = obj.dpl_moment;
             data.dpl_mass = obj.dpl_mass;
+            data.e = obj.e;
         end
     end
 end
