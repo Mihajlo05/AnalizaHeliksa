@@ -10,7 +10,7 @@ classdef World
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
-        e = 1 %depth of the potential well in lennard-jones potential
+        e = 0.01 %depth of the potential well in lennard-jones potential
     end
     
     methods
@@ -110,6 +110,7 @@ classdef World
             %each point in time, basically memorizing all of the history
             %of the world)
             
+            data.n_dpls = length(obj.dpls);
             data.dpls = obj.dpls;
             data.time = obj.time;
             
