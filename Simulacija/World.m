@@ -11,12 +11,14 @@ classdef World
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
         e = 0.01 %depth of the potential well in lennard-jones potential
+        
+        mu0 = 1.25663706 %permeability of free space
     end
     
     methods
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
             r = dpl2.pos - dpl1.pos;
-            dist = sqrt(r(1)^2 + r(2)^2 + r(3)^2);
+            dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
             if dist < 2^(1/6)*obj.dpl_r
@@ -29,6 +31,24 @@ classdef World
             end
         end
         
+        function [force1, force2] = dpl_dpl_force(obj, dpl1, dpl2)
+            r = dpl2.pos - dpl1.pos;
+            dist = sqrt(sum(r.^2, 'all'));
+            
+            k = (3*obj.mu0)/(4*pi*dist^4);
+            
+            m1 = dpl1.ori * obj.dpl_moment;
+            m2 = dpl2.ori * obj.dpl_moment;
+            
+            rxm1 = cross(r, m1);
+            rxm2 = cross(r, m2);
+            m1_dot_m2 = dot(m1, m2);
+            rxm1_dot_rxm2 = dot(rxm1, rxm2);
+            
+            force1 = k*(dot(rxm1, m2) + dot(rxm2, m1) - 2*r*m1_dot_m2 + 5*r*rxm1_dot_rxm2);
+            force2 = -force1;
+        end
+        
         function [new_accs, new_ang_accs] = calc_forces(obj)
             n = length(obj.dpls);
             
@@ -38,10 +58,12 @@ classdef World
             for i = 1:n
                 for j = (i+1):n
                     [lj1, lj2] = obj.lj_force(obj.dpls(i), obj.dpls(j));
+                    [dp1, dp2] = obj.dpl_dpl_force(obj.dpls(i), obj.dpls(j));
+                    
                     
                     for k = 1:3
-                        new_accs(i, k) = new_accs(i, k) + lj1(k);
-                        new_accs(j, k) = new_accs(j, k) + lj2(k);
+                        new_accs(i, k) = new_accs(i, k) + (lj1(k) + dp1(k))/obj.dpl_mass;
+                        new_accs(j, k) = new_accs(j, k) + (lj2(k) + dp2(k))/obj.dpl_mass;
                     end
                 end
                 
