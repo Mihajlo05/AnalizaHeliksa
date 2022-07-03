@@ -9,7 +9,8 @@ function strd = data_str(data)
     end
     
     strd = strd + newline + "[dpls]" + newline;
-    for i = 1:sum(size(data.dpls), 'all')
+    [x_size, y_size] = size(data.dpls);
+    for i = 1:(x_size * y_size)
         for j = 1:3
             strd = strd + string(data.dpls(i).pos(j)) + " ";
         end
