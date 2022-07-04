@@ -10,7 +10,7 @@ classdef World
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
-        e = 0.01 %depth of the potential well in lennard-jones potential
+        e = 0.02 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
     end
@@ -21,8 +21,10 @@ classdef World
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            if dist < 2^(1/6)*obj.dpl_r
-                F = 4*obj.e*( (12*(obj.dpl_r^12)/dist^13) + (6*(obj.dpl_r^6)/dist^7));
+            rad = 2*obj.dpl_r;
+            
+            if dist < (2^(1/6))*rad
+                F = 4*obj.e*( 12*(rad^12)/dist^13 + 6*(rad^6)/dist^7);
                 force1 = -F*dir;
                 force2 = F*dir;
             else
@@ -62,8 +64,8 @@ classdef World
                     
                     
                     for k = 1:3
-                        new_accs(i, k) = new_accs(i, k) + (lj1(k) + dp1(k))/obj.dpl_mass;
-                        new_accs(j, k) = new_accs(j, k) + (lj2(k) + dp2(k))/obj.dpl_mass;
+                        new_accs(i, k) = new_accs(i, k) + (lj1(k))/obj.dpl_mass;
+                        new_accs(j, k) = new_accs(j, k) + (lj2(k))/obj.dpl_mass;
                     end
                 end
                 
