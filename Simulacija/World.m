@@ -10,7 +10,7 @@ classdef World
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
-        e = 0.02 %depth of the potential well in lennard-jones potential
+        e = 1 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
     end
@@ -21,7 +21,7 @@ classdef World
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            sigma = obj.dpl_r;
+            sigma = 2*obj.dpl_r;
             
             if dist < (2^(1/6))*sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
@@ -87,18 +87,21 @@ classdef World
                     [lj1, lj2] = obj.lj_force(obj.dpls(i), obj.dpls(j));
                     [dp1, dp2] = obj.dpl_dpl_force(obj.dpls(i), obj.dpls(j));
                     
+                    [dt1, dt2] = obj.dpl_dpl_torque(obj.dpls(i), obj.dpls(j));
                     
                     for k = 1:3
                         F1 = lj1(k) + dp1(k);
                         F2 = lj2(k) + dp2(k);
                         
+                        T1 = dt1(k);
+                        T2 = dt2(k);
+                        
                         new_accs(i, k) = new_accs(i, k) + F1/obj.dpl_mass;
                         new_accs(j, k) = new_accs(j, k) + F2/obj.dpl_mass;
+                        
+                        new_ang_accs(i, k) = new_ang_accs(i, k) + T1/obj.dpl_mass;
+                        new_ang_accs(j, k) = new_ang_accs(j, k) + T2/obj.dpl_mass;
                     end
-                end
-                
-                for k = 1:3
-                    new_ang_accs(i, k) = obj.dpls(i).ang_acc(k);
                 end
             end
         end
