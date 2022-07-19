@@ -51,6 +51,18 @@ classdef World
             force2 = -force1;
         end
         
+        function B = B_from_dpl(obj, dpl, where) %where is in world coords
+            m = dpl.ori * obj.dpl_moment;
+            k = obj.mu0 / (4*pi);
+            r = where - dpl.pos;
+            d = sqrt(sum(r.^2, 'all'));
+            
+            part1 = 3*r*dot(m, r)/d^5;
+            part2 = m/d^3;
+            
+            B = k*(part1 - part2);
+        end
+        
         function [new_accs, new_ang_accs] = calc_forces(obj)
             n = length(obj.dpls);
             
