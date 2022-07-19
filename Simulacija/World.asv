@@ -69,12 +69,6 @@ classdef World
         end
         
         function [torque1, torque2] = dpl_dpl_torque(obj, dpl1, dpl2)
-            B1 = obj.B_from_dpl(dpl1, dpl2.pos);
-            B2 = obj.B_from_dpl(dpl2, dpl1.pos);
-            
-            torque1 = obj.B_to_dpl_torque(dpl1, B2);
-            torque2 = obj.B_to_dpl_torque(dpl2, B1);
-        end
         
         function [new_accs, new_ang_accs] = calc_forces(obj)
             n = length(obj.dpls);
