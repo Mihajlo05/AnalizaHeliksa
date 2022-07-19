@@ -47,7 +47,7 @@ classdef World
             m1_dot_m2 = dot(m1, m2);
             rxm1_dot_rxm2 = dot(rxm1, rxm2);
             
-            force1 = k*(dot(rxm1, m2) + dot(rxm2, m1) - 2*r*m1_dot_m2 + 5*r*rxm1_dot_rxm2);
+            force1 = k*(cross(rxm1, m2) + cross(rxm2, m1) - 2*r*m1_dot_m2 + 5*r*rxm1_dot_rxm2);
             force2 = -force1;
         end
         
