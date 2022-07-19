@@ -21,10 +21,10 @@ classdef World
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            rad = 2*obj.dpl_r;
+            sigma = obj.dpl_r;
             
-            if dist < (2^(1/6))*rad
-                F = 4*obj.e*( 12*(rad^12)/dist^13 + 6*(rad^6)/dist^7);
+            if dist < (2^(1/6))*sigma
+                F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
                 force1 = -F*dir;
                 force2 = F*dir;
             else
@@ -64,8 +64,11 @@ classdef World
                     
                     
                     for k = 1:3
-                        new_accs(i, k) = new_accs(i, k) + (lj1(k))/obj.dpl_mass;
-                        new_accs(j, k) = new_accs(j, k) + (lj2(k))/obj.dpl_mass;
+                        F1 = lj1(k) + dp1(k);
+                        F2 = lj2(k) + dp2(k);
+                        
+                        new_accs(i, k) = new_accs(i, k) + F1/obj.dpl_mass;
+                        new_accs(j, k) = new_accs(j, k) + F2/obj.dpl_mass;
                     end
                 end
                 
