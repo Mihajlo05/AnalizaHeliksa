@@ -16,6 +16,10 @@ classdef World
     end
     
     methods
+        function I = get_dpl_I(obj)
+            I = 2*obj.dpl_mass*obj.dpl_r^2 / 5;
+        end
+        
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
             r = dpl2.pos - dpl1.pos;
             dist = sqrt(sum(r.^2, 'all'));
@@ -99,8 +103,8 @@ classdef World
                         new_accs(i, k) = new_accs(i, k) + F1/obj.dpl_mass;
                         new_accs(j, k) = new_accs(j, k) + F2/obj.dpl_mass;
                         
-                        new_ang_accs(i, k) = new_ang_accs(i, k) + T1/obj.dpl_mass;
-                        new_ang_accs(j, k) = new_ang_accs(j, k) + T2/obj.dpl_mass;
+                        new_ang_accs(i, k) = new_ang_accs(i, k) + T1/obj.get_dpl_I();
+                        new_ang_accs(j, k) = new_ang_accs(j, k) + T2/obj.get_dpl_I();
                     end
                 end
             end
