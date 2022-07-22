@@ -67,7 +67,7 @@ classdef World
             B = k*(part1 - part2);
         end
         
-        function torque = B_to_dpl_torque(obj, dpl, B)
+        function torque = B_dpl_torque(obj, dpl, B)
             m = dpl.ori * obj.dpl_moment;
             torque = cross(m, B);
         end
@@ -76,8 +76,8 @@ classdef World
             B1 = obj.B_from_dpl(dpl1, dpl2.pos);
             B2 = obj.B_from_dpl(dpl2, dpl1.pos);
             
-            torque1 = obj.B_to_dpl_torque(dpl1, B2);
-            torque2 = obj.B_to_dpl_torque(dpl2, B1);
+            torque1 = obj.B_dpl_torque(dpl1, B2);
+            torque2 = obj.B_dpl_torque(dpl2, B1);
         end
         
         function [new_accs, new_ang_accs] = calc_forces(obj)
