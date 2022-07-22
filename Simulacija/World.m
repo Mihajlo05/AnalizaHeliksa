@@ -10,7 +10,7 @@ classdef World
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
-        e = 1 %depth of the potential well in lennard-jones potential
+        e = 0.01 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
     end
@@ -38,7 +38,7 @@ classdef World
         end
         
         function [force1, force2] = dpl_dpl_force(obj, dpl1, dpl2)
-            r = dpl2.pos - dpl1.pos;
+            r = dpl1.pos - dpl2.pos;
             dist = sqrt(sum(r.^2, 'all'));
             
             k = (3*obj.mu0)/(4*pi*dist^4);
