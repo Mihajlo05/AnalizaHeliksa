@@ -25,6 +25,11 @@ classdef World
             KE = obj.dpl_mass*v^2 / 2;
         end
         
+        function KE = dpl_rot_KE(obj, dpl)
+            omega = sqrt(sum(dpl.ang_vel.^2, 'all'));
+            KE = obj.get_dpl_I() * omega^2 / 2;
+        end
+        
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
             r = dpl2.pos - dpl1.pos;
             dist = sqrt(sum(r.^2, 'all'));
