@@ -38,11 +38,10 @@ classdef World
             
             sigma = 2*obj.dpl_r;
             
-            if r < (2^(1/6))*sigma
-                U = 4*obj.e*((sigma/r)^12 - (sigma/r)^6);
-            else
-                U = 0;
+            if r >= (2^(1/6))*sigma
+                r = (2^(1/6))*sigma;
             end
+                U = 4*obj.e*((sigma/r)^12 - (sigma/r)^6);
         end
         
         function U = B_dpl_U(obj, dpl, B)
