@@ -14,6 +14,7 @@ classdef World
         e = 0.01 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
+        C = 1
     end
     
     methods
@@ -34,6 +35,19 @@ classdef World
         function U = B_dpl_U(obj, dpl, B)
             m = dpl.ori * obj.dpl_moment;
             U = -dot(m, B);
+        end
+        
+        function U = dpl_dpl_U(obj, dpl1, dpl2)
+            m1 = dpl1.ori * obj.dpl_moment;
+            m2 = dpl2.ori * obj.dpl_moment;
+            
+            r = dpl1.pos - dpl2.pos;
+            dist = sqrt(sum(r.^2, 'all'));
+            
+            k = obj.C/dist^3;
+            
+            U = dot(m1, m2) - 3*dot(m1, r)*dot(m2, r)/dist^2;
+            U = k*U;
         end
         
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
