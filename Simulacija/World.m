@@ -169,6 +169,7 @@ classdef World
                 avel = obj.dpls(i).ang_vel;
                 
                 obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
+                obj.dpls(i).ang_acc = new_aacc;
             end
             
             obj.time = obj.time + dt;
