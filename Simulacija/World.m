@@ -32,6 +32,19 @@ classdef World
             KE = obj.get_dpl_I() * omega^2 / 2;
         end
         
+        function U = lj_U(obj, dpl1, dpl2)
+            d = dpl1.pos - dpl2.pos;
+            r = sqrt(sum(d.^2, 'all'));
+            
+            sigma = 2*obj.dpl_r;
+            
+            if r < (2^(1/6))*sigma
+                U = 4*obj.e*((sigma/r)^12 - (sigma/r)^6);
+            else
+                U = 0;
+            end
+        end
+        
         function U = B_dpl_U(obj, dpl, B)
             m = dpl.ori * obj.dpl_moment;
             U = -dot(m, B);
