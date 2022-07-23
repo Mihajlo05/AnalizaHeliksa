@@ -6,6 +6,7 @@ classdef World
     properties
         dpls = [] %dipoles
         time = 0
+        B = [0 0 0]
         
         dpl_r = 1; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
@@ -102,6 +103,12 @@ classdef World
             new_ang_accs = zeros(n, 3);
             
             for i = 1:n
+                bt = obj.B_dpl_torque(obj.dpls(i), obj.B);
+                
+                for k = 1:3
+                    new_ang_accs(i, k) = new_ang_accs(i, k) + bt(k)/obj.get_dpl_I();
+                end
+                
                 for j = (i+1):n
                     [lj1, lj2] = obj.lj_force(obj.dpls(i), obj.dpls(j));
                     [dp1, dp2] = obj.dpl_dpl_force(obj.dpls(i), obj.dpls(j));
