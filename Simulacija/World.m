@@ -30,6 +30,11 @@ classdef World
             KE = obj.get_dpl_I() * omega^2 / 2;
         end
         
+        function U = B_dpl_U(obj, dpl, B)
+            m = dpl.ori * obj.dpl_moment;
+            U = -dot(m, B);
+        end
+        
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
             r = dpl2.pos - dpl1.pos;
             dist = sqrt(sum(r.^2, 'all'));
