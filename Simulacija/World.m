@@ -49,9 +49,16 @@ classdef World
         end
         
         function U = dpl_dpl_U(obj, dpl1, dpl2)
-            B2 = obj.B_from_dpl(dpl2, dpl1.pos);
-            
-            U = -obj.B_dpl_U(dpl1, B2);
+            m1 = dpl1.ori * obj.dpl_moment;
+            m2 = dpl2.ori * obj.dpl_moment;
+
+            r = dpl1.pos - dpl2.pos;
+            dist = sqrt(sum(r.^2, 'all'));
+
+            k = 10/dist^3;
+
+            U = dot(m1, m2) - 3*dot(m1, r)*dot(m2, r)/dist^2;
+            U = k*U;
         end
         
         function KE = net_KE(obj)

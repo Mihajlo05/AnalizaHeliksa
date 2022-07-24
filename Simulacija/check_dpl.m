@@ -14,6 +14,8 @@ ts = data.time;
 x1 = [];
 x2 = [];
 Es = [];
+KEs = [];
+PEs = [];
 
 for i = 1:length(ts)
     wt = World;
@@ -21,6 +23,8 @@ for i = 1:length(ts)
     x1 = [x1, data.dpls(1, i).pos(1)];
     x2 = [x2, data.dpls(2, i).pos(1)];
     Es = [Es, wt.net_E()];
+    KEs = [KEs, wt.net_KE()];
+    PEs = [PEs, wt.net_dpl_U()];
 end
 
 figure
@@ -31,4 +35,8 @@ plot(ts, x1)
 plot(ts, x2)
 
 figure
+hold on
 plot(ts, Es)
+plot(ts, KEs)
+plot(ts, PEs)
+legend('E', 'KE', 'PE')
