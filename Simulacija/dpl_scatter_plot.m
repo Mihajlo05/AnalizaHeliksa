@@ -19,21 +19,11 @@ for i = 1:N
 end
 
 Es = [];
-LJs = [];
 ts = data.time;
 
 for i = 1:length(ts)
-    w.dpls = [data.dpls(1, i); data.dpls(2, i); data.dpls(3, i); data.dpls(4, i)];
+    w.dpls = data.dpls(:, i);
     Es = [Es, w.net_E()];
-    
-    LJ = 0;
-    for j = 1:length(data.dpls)
-        for k = (j+1):length(data.dpls)
-            LJ = LJ + w.lj_U(data.dpls(j, i), data,dpls(k, i));
-        end
-    end
-    
-    LJs = [LJs, LJ];
 end
 
 figure
@@ -45,8 +35,4 @@ figure
 hold on
 grid on
 plot(ts, Es)
-figure
-hold on
-grid on
-plot(ts, LJs)
 

@@ -11,10 +11,9 @@ classdef World
         dpl_r = 0.5; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
-        e = 0.01 %depth of the potential well in lennard-jones potential
+        e = 1 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
-        C = 1.256/(4*pi)
     end
     
     methods
@@ -36,7 +35,7 @@ classdef World
             d = dpl1.pos - dpl2.pos;
             r = sqrt(sum(d.^2, 'all'));
             
-            sigma = 2.1*obj.dpl_r;
+            sigma = 1.8*obj.dpl_r;
             
             if r >= (2^(1/6))*sigma
                 r = (2^(1/6))*sigma;
@@ -50,16 +49,9 @@ classdef World
         end
         
         function U = dpl_dpl_U(obj, dpl1, dpl2)
-            m1 = dpl1.ori * obj.dpl_moment;
-            m2 = dpl2.ori * obj.dpl_moment;
+            B2 = obj.B_from_dpl(dpl2, dpl1.pos);
             
-            r = dpl1.pos - dpl2.pos;
-            dist = sqrt(sum(r.^2, 'all'));
-            
-            k = obj.C/dist^3;
-            
-            U = dot(m1, m2) - 3*dot(m1, r)*dot(m2, r)/dist^2;
-            U = k*U;
+            U = -obj.B_dpl_U(dpl1, B2);
         end
         
         function KE = net_KE(obj)
@@ -99,19 +91,7 @@ classdef World
         end
         
         function E = net_E(obj)
-            E = 0;
-            n = length(obj.dpls);
-            for i = 1:n
-                E = E + obj.dpl_KE(obj.dpls(i));
-                E = E + obj.dpl_rot_KE(obj.dpls(i));
-            end
-            
-            for i = 1:n
-                for j = (i+1):n
-                    E = E + obj.dpl_dpl_U(obj.dpls(i), obj.dpls(j));
-                    E = E + obj.lj_U(obj.dpls(i), obj.dpls(j));
-                end
-            end
+            E = obj.net_KE() + obj.net_rot_KE() + obj.net_lj_U() + obj.net_dpl_U();
         end
         
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
@@ -119,7 +99,7 @@ classdef World
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            sigma = 2.1*obj.dpl_r;
+            sigma = 1.8*obj.dpl_r;
             
             if dist < (2^(1/6))*sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
