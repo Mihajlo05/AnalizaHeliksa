@@ -14,7 +14,7 @@ classdef World
         e = 0.01 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
-        C = 1
+        C = 1.256/(4*pi)
     end
     
     methods
@@ -36,7 +36,7 @@ classdef World
             d = dpl1.pos - dpl2.pos;
             r = sqrt(sum(d.^2, 'all'));
             
-            sigma = 1.9*obj.dpl_r;
+            sigma = 2.1*obj.dpl_r;
             
             if r >= (2^(1/6))*sigma
                 r = (2^(1/6))*sigma;
@@ -62,12 +62,29 @@ classdef World
             U = k*U;
         end
         
+        function E = net_E(obj)
+            E = 0;
+            n = length(obj.dpls);
+            for i = 1:n
+                E = E + obj.dpl_KE(obj.dpls(i));
+                E = E + obj.dpl_rot_KE(obj.dpls(i));
+            end
+            
+            
+            for i = 1:n
+                for j = (i+1):n
+                    E = E + obj.dpl_dpl_U(obj.dpls(i), obj.dpls(j));
+                    E = E + obj.lj_U(obj.dpls(i), obj.dpls(j));
+                end
+            end
+        end
+        
         function [force1, force2] = lj_force(obj, dpl1, dpl2)
             r = dpl2.pos - dpl1.pos;
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            sigma = 2*obj.dpl_r;
+            sigma = 2.1*obj.dpl_r;
             
             if dist < (2^(1/6))*sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
