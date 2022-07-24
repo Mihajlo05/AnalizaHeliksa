@@ -62,6 +62,42 @@ classdef World
             U = k*U;
         end
         
+        function KE = net_KE(obj)
+            KE = 0;
+            
+            for i = 1:length(obj.dpls)
+                KE = KE + obj.dpl_KE(obj.dpls(i));
+            end
+        end
+        
+        function RKE = net_rot_KE(obj)
+            RKE = 0;
+            
+            for i = 1:length(obj.dpls)
+                RKE = RKE + obj.dpl_rot_KE(obj.dpls(i));
+            end
+        end
+        
+        function U = net_lj_U(obj)
+            U = 0;
+            n = length(obj.dpls);
+            for i = 1:n
+                for j = (i+1):n
+                    U = U + obj.lj_U(obj.dpls(i), obj.dpls(j));
+                end
+            end
+        end
+        
+        function U = net_dpl_U(obj)
+            U = 0;
+            n = length(obj.dpls);
+            for i = 1:n
+                for j = (i+1):n
+                    U = U + obj.dpl_dpl_U(obj.dpls(i), obj.dpls(j));
+                end
+            end
+        end
+        
         function E = net_E(obj)
             E = 0;
             n = length(obj.dpls);
@@ -69,7 +105,6 @@ classdef World
                 E = E + obj.dpl_KE(obj.dpls(i));
                 E = E + obj.dpl_rot_KE(obj.dpls(i));
             end
-            
             
             for i = 1:n
                 for j = (i+1):n

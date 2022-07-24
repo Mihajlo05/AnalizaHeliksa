@@ -35,6 +35,10 @@ z3 = [];
 z4 = [];
 
 Es = [];
+DPs = [];
+LJs =[];
+KEs = [];
+RKEs = [];
 
 for i = 1:length(ts)
     z1 = [z1, data.dpls(1, i).pos(3)];
@@ -56,14 +60,10 @@ for i = 1:length(ts)
     
     Es = [Es, w.net_E()];
     
-    LJ = 0;
-    for j = 1:length(w.dpls)
-        for k = (j+1):length(w.dpls)
-            LJ = LJ + w.lj_U(w.dpls(j), w.dpls(k));
-        end
-    end
-    
-    LJs = [LJs, LJ];
+    DPs = [DPs, w.net_dpl_U()];
+    LJs = [LJs, w.net_lj_U()];
+    KEs = [KEs, w.net_KE()];
+    RKEs = [RKEs, w.net_rot_KE()];
 end
 
 figure(1)
@@ -79,7 +79,11 @@ figure(2)
 hold on
 grid on
 plot(ts, Es)
+plot(ts, DPs)
 plot(ts, LJs)
+plot(ts, KEs)
+plot(ts, RKEs)
+legend('E', 'DP', 'LJ', 'KE', 'RKE', 'Location', 'best')
 
 figure(3)
 hold on
