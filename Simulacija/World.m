@@ -8,7 +8,7 @@ classdef World
         time = 0
         B = [0 0 0]
         
-        dpl_r = 1; %radius of dipoles
+        dpl_r = 0.5; %radius of dipoles
         dpl_moment = 1; %magnetic moment of dipoles
         dpl_mass = 1; %mass of dipoles
         e = 0.01 %depth of the potential well in lennard-jones potential
@@ -36,7 +36,7 @@ classdef World
             d = dpl1.pos - dpl2.pos;
             r = sqrt(sum(d.^2, 'all'));
             
-            sigma = 2*obj.dpl_r;
+            sigma = 1.9*obj.dpl_r;
             
             if r >= (2^(1/6))*sigma
                 r = (2^(1/6))*sigma;
