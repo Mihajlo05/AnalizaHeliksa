@@ -9,6 +9,7 @@ data = w.simulate(0.01, 1000);
 ts = data.time;
 
 Es = [];
+KEs = [];
 
 z1 = [];
 z2 = [];
@@ -17,6 +18,7 @@ z3 = [];
 for i = 1:length(ts)
     w.dpls = [data.dpls(1, i); data.dpls(2, i); data.dpls(3, i)];
     Es = [Es, w.net_E()];
+    KEs = [KEs, w.net_KE()];
     
     z1 = [z1, w.dpls(1).pos(3)];
     z2 = [z2, w.dpls(2).pos(3)];
@@ -29,6 +31,8 @@ subplot(2, 1, 1)
 hold on
 grid on
 plot(ts, Es)
+plot(ts, KEs)
+legend('E', 'KE')
 
 subplot(2, 1, 2)
 hold on
