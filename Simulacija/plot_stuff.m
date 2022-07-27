@@ -1,10 +1,10 @@
-w.B = [0 0 0.1];
+w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 1000;
+nit = 1500;
 
-data = w.simulate(0.01, nit);
+data = w.simulate(0.04, nit);
 ts = data.time;
 
 figure
@@ -98,11 +98,21 @@ for j = 1:100:length(ts)
     scatter3(xs, ys, zs);
 end
 
+Thetas1 = [];
+Thetas2 = [];
 
+r1 = data.dpls(1, 1).pos;
+r2 = data.dpls(14, 1).pos;
 
+for i = 1:length(ts)
+    r2 = data.dpls(1, i).pos;
+    
+    cosTheta1 = max(min(dot(r1,r2)/(norm(r1)*norm(r2)),1),-1);
+    theta1 = real(acosd(cosTheta1));
+    
+    Thetas1 = [Thetas1, theta1];
+end
 
-
-
-
-
-
+figure
+plot(ts, Thetas1)
+grid on

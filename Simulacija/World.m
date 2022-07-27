@@ -97,6 +97,14 @@ classdef World
             end
         end
         
+        function U = net_B_U(obj)
+            U = 0;
+            n = length(obj.dpls);
+            for i = 1:n
+                U = U + obj.B_dpl_U(obj.dpls(i), obj.B);
+            end
+        end
+        
         function E = net_E(obj)
             E = obj.net_KE() + obj.net_rot_KE() + obj.net_lj_U() + obj.net_dpl_U();
         end
