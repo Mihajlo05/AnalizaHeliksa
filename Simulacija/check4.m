@@ -1,4 +1,5 @@
 w = World;
+w.B = [9 0 0];
 
 d = Dipole.default;
 

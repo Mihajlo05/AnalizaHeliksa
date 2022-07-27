@@ -1,25 +1,10 @@
-N = 5;
-R = 1/(2*sin(pi/N));
+w.B = [0 0 15];
 
-w = World;
-w.B = [0 0 0];
+N = length(w.dpls);
 
-nit = 100;
-alpha = 0.514;
+nit = 1000;
 
-for i = 1:N
-    x = R*cos(i*2*pi/N + alpha);
-    y = R*sin(i*2*pi/N + alpha);
-    
-    mx = cos(i*2*pi/N + pi/2 + alpha);
-    my = sin(i*2*pi/N + pi/2 + alpha);
-    
-    d = Dipole([x, y, 0], [mx, my, 0]);
-    w.dpls = [w.dpls; d];
-end
-
-
-data = w.simulate(0.04, nit);
+data = w.simulate(0.01, nit);
 ts = data.time;
 
 figure
@@ -48,10 +33,18 @@ x2 = [];
 y2 = [];
 z2 = [];
 
+mx2 = [];
+my2 = [];
+mz2 = [];
+
 for i = 1:N
     x2 = [x2, data.dpls(i, nit).pos(1)];
     y2 = [y2, data.dpls(i, nit).pos(2)];
     z2 = [z2, data.dpls(i, nit).pos(3)];
+    
+    mx2 = [mx2, data.dpls(i, nit).ori(1)];
+    my2 = [my2, data.dpls(i, nit).ori(2)];
+    mz2 = [mz2, data.dpls(i, nit).ori(3)];
 end
 
 scatter3(x2, y2, z2)
@@ -83,3 +76,33 @@ subplot(2, 1, 1)
 plot(ts, Ds)
 subplot(2, 1, 2)
 plot(ts, Bs)
+
+figure;
+quiver3(x2-0.5*mx2,y2-0.5*my2,z2-0.5*mz2,mx2,my2,mz2,0.5,'LineWidth',2);
+axis equal;
+
+for j = 1:100:length(ts)
+    wt = World;
+    wt.dpls = data.dpls(:, j);
+    
+    xs = [];
+    ys = [];
+    zs = [];
+    for i = 1:N
+        xs = [xs, wt.dpls(i).pos(1)];
+        ys = [ys, wt.dpls(i).pos(2)];
+        zs = [zs, wt.dpls(i).pos(3)];
+    end
+    
+    figure(j);
+    scatter3(xs, ys, zs);
+end
+
+
+
+
+
+
+
+
+
