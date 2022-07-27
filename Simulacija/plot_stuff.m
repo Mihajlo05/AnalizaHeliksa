@@ -2,7 +2,7 @@ w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 1500;
+nit = 900;
 
 data = w.simulate(0.04, nit);
 ts = data.time;
@@ -100,19 +100,39 @@ end
 
 Thetas1 = [];
 Thetas2 = [];
+Rs1 = [];
+Rs2 = [];
 
 r1 = data.dpls(1, 1).pos;
 r2 = data.dpls(14, 1).pos;
 
 for i = 1:length(ts)
-    r2 = data.dpls(1, i).pos;
+    r3 = data.dpls(1, i).pos;
+    r4 = data.dpls(14, i).pos;
     
-    cosTheta1 = max(min(dot(r1,r2)/(norm(r1)*norm(r2)),1),-1);
+    cosTheta1 = max(min(dot(r1,r3)/(norm(r1)*norm(r3)),1),-1);
+    cosTheta2 = max(min(dot(r2,r4)/(norm(r2)*norm(r4)),1),-1);
     theta1 = real(acosd(cosTheta1));
+    theta2 = real(acosd(cosTheta2));
     
     Thetas1 = [Thetas1, theta1];
+    Thetas2 = [Thetas2, theta2];
+    
+    R1 = sqrt(sum(r1.^2, 'all'));
+    R2 = sqrt(sum(r2.^2, 'all'));
+    
+    Rs1 = [Rs1, R1];
+    Rs2 = [Rs2, R2];
 end
 
 figure
+hold on
 plot(ts, Thetas1)
+plot(ts, Thetas2)
+grid on
+
+figure
+hold on
+plot(ts, Rs1)
+plot(ts, Rs2)
 grid on
