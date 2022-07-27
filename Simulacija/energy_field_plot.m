@@ -1,11 +1,13 @@
 B = 0;
 dB = 0.05;
 
-iters = 6;
+iters = 10;
 
 DipEs = [];
 BEs = [];
 MZs = [];
+Theta1s = [];
+Theta2s = [];
 
 Bs = [];
 
@@ -16,9 +18,9 @@ for i = 1:iters
     Bs = [Bs, B];
     
     w.B = [0 0 B];
-    %data = w.simulate(0.04, 1000);
-    %datas = [datas; data];
-    data = datas(i);
+    data = w.simulate(0.04, 1000);
+    datas = [datas; data];
+    %data = datas(i);
     
     wt = World;
     wt.B = w.B;
@@ -37,6 +39,21 @@ for i = 1:iters
     DipEs = [DipEs, Ed];
     BEs = [BEs, Eb];
     MZs = [MZs, mz];
+    
+    r1 = datas(1).dpls(1, 1).pos;
+    r2 = datas(1).dpls(14, 1).pos;
+    
+    r3 = data.dpls(1, i).pos;
+    r4 = data.dpls(14, i).pos;
+    
+    cosTheta1 = max(min(dot(r1, r3)/(norm(r1)*norm(r3)), 1), -1);
+    cosTheta2 = max(min(dot(r2, r4)/(norm(r2)*norm(r4)), 1), -1);
+    
+    theta1 = real(acosd(cosTheta1));
+    theta2 = real(acosd(cosTheta2));
+    
+    Theta1s = [Theta1s, theta1];
+    Theta2s = [Theta2s, theta2];
 end
 
 figure;
@@ -52,3 +69,8 @@ plot(Bs, BEs);
 figure;
 plot(Bs, MZs);
 
+figure(4)
+hold on
+grid on
+plot(Bs, Theta1s)
+plot(Bs, Theta2s)
