@@ -2,10 +2,9 @@ w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 20000;
+nit = 100000;
 last_nit = 1;
-
-[data, lastIt] = w.simulate(0.02, nit);
+[data, lastIt] = w.simulate(0.01, nit);
 ts = data.time;
 
 figure
@@ -120,8 +119,8 @@ for i = 1:lastIt
     Thetas1(i) = theta1;
     Thetas2(i) = theta2;
     
-    R1 = sqrt(sum(r1.^2, 'all'));
-    R2 = sqrt(sum(r2.^2, 'all'));
+    R1 = sqrt(sum(r3.^2, 'all'));
+    R2 = sqrt(sum(r4.^2, 'all'));
     
     Rs1(i) = R1;
     Rs2(i) = R2;
@@ -169,3 +168,17 @@ grid on;
 title("Grafik zavisnost Z komponente dipolnog momenta od vremena")
 xlabel("vreme")
 ylabel("Z komponenta dipolnog momenta")
+
+Hs = zeros(1, lastIt);
+
+for i = 1:lastIt
+    H = abs(data.dpls(1, i).pos(3) - data.dpls(data.n_dpls, i).pos(3));
+    Hs(i) = H;
+end
+
+figure
+plot(ts, Hs)
+title("Grafik zavisnosti visine od vremena")
+xlabel("Vreme")
+ylabel("Visina")
+grid on
