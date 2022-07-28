@@ -4,18 +4,16 @@ classdef Dipole
     %and holds info about it's transformation and velocity
     
     properties
-        pos
+        pos = [0 0 0]
         vel = [0 0 0]
         acc = [0 0 0]
-        ori
+        ori = [0 0 0]
         ang_vel = [0 0 0]
         ang_acc = [0 0 0]
     end
     
     methods
-        function obj = Dipole(pos, ori)
-            obj.pos = pos;
-            obj.ori = ori;
+        function obj = Dipole()
         end
     end
     
@@ -23,7 +21,7 @@ classdef Dipole
         %Generate a dipole in cetner of coord system [0 0 0] and whose
         %magnetic moment is pointing up [0 0 1] (in positive z direction)
         function obj = default()
-            obj = Dipole([0 0 0], [0 0 1]);
+            obj = Dipole();
         end
     end
 end

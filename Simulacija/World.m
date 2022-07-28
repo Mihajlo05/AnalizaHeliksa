@@ -232,7 +232,7 @@ classdef World
             for i = 1:n
                 new_acc = [new_accs(i, 1), new_accs(i, 2), new_accs(i, 3)];
                 acc = obj.dpls(i).acc;
-                vel = obj.dpls(i).vel;
+                %vel = obj.dpls(i).vel;
                 
                 %obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
                 obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
@@ -240,7 +240,7 @@ classdef World
                 
                 new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
                 aacc = obj.dpls(i).ang_acc;
-                avel = obj.dpls(i).ang_vel;
+                %avel = obj.dpls(i).ang_vel;
                 
                 %obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
                 obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
@@ -268,14 +268,28 @@ classdef World
             %of the world)
             
             data.n_dpls = length(obj.dpls);
-            data.dpls = obj.dpls;
-            data.time = obj.time;
+            ds(data.n_dpls, n) = Dipole;
+            data.dpls = ds;
+            
+            for j = 1:data.n_dpls
+                data.dpls(j, 1) = obj.dpls(j);
+            end
+            
+            data.time = zeros(1, n);
+            data.time(1) = obj.time;
             
             for i = 1:n
+                
+                if mod(i, 100) == 0
+                    disp("iter: " + string(i) + "; " + string(ceil(i/n*100)) + "%");
+                end
+                
                 obj = obj.update(dt);
                 
-                data.dpls = [data.dpls, obj.dpls];
-                data.time = [data.time, obj.time];
+                for j = 1:data.n_dpls
+                    data.dpls(j, i+1) = obj.dpls(j);
+                end
+                data.time(i+1) = obj.time;
             end
             
             data.dpl_r = obj.dpl_r;

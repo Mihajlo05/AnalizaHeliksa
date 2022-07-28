@@ -3,23 +3,23 @@ dB = 0.05;
 
 iters = 10;
 
-DipEs = [];
-BEs = [];
-MZs = [];
-Theta1s = [];
-Theta2s = [];
+DipEs = zeros(1, iters);
+BEs = zeros(1, iters);
+MZs = zeros(1, iters);
+Theta1s = zeros(1, iters);
+Theta2s = zeros(1, iters);
 
-Bs = [];
+Bs = zeros(1, iters);
 
-datas = [];
+datas(1:iters) = struct("n_dpls", 1,  "dpls", Dipole,  "time", 0, "dpl_r", 0.5,  "dpl_moment", [0 0 1], "dpl_mass", 1,  'e', 1);
 
 for i = 1:iters
     B = B + dB;
-    Bs = [Bs, B];
+    Bs(i) = B;
     
     w.B = [0 0 B];
-    data = w.simulate(0.04, 1000);
-    datas = [datas; data];
+    data = w.simulate(0.01, 1000);
+    datas(i) = data;
     %data = datas(i);
     
     wt = World;
@@ -36,15 +36,15 @@ for i = 1:iters
     
     mz = mz / length(data.dpls);
     
-    DipEs = [DipEs, Ed];
-    BEs = [BEs, Eb];
-    MZs = [MZs, mz];
+    DipEs(i) = Ed;
+    BEs(i) = Eb;
+    MZs(i) = mz;
     
     r1 = datas(1).dpls(1, 1).pos;
     r2 = datas(1).dpls(14, 1).pos;
     
-    r3 = data.dpls(1, i).pos;
-    r4 = data.dpls(14, i).pos;
+    r3 = data.dpls(1, 1000).pos;
+    r4 = data.dpls(14, 1000).pos;
     
     cosTheta1 = max(min(dot(r1, r3)/(norm(r1)*norm(r3)), 1), -1);
     cosTheta2 = max(min(dot(r2, r4)/(norm(r2)*norm(r4)), 1), -1);
@@ -52,8 +52,8 @@ for i = 1:iters
     theta1 = real(acosd(cosTheta1));
     theta2 = real(acosd(cosTheta2));
     
-    Theta1s = [Theta1s, theta1];
-    Theta2s = [Theta2s, theta2];
+    Theta1s(i) = theta1;
+    Theta2s(i) = theta2;
 end
 
 figure;

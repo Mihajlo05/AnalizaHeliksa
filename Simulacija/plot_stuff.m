@@ -2,21 +2,21 @@ w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 900;
+nit = 4000;
 
 data = w.simulate(0.04, nit);
 ts = data.time;
 
 figure
 
-x1 = [];
-y1 = [];
-z1 = [];
+x1 = zeros(1, N);
+y1 = zeros(1, N);
+z1 = zeros(1, N);
 
 for i = 1:N
-    x1 = [x1, data.dpls(i, 1).pos(1)];
-    y1 = [y1, data.dpls(i, 1).pos(2)];
-    z1 = [z1, data.dpls(i, 1).pos(3)];
+    x1(i) = data.dpls(i, 1).pos(1);
+    y1(i) = data.dpls(i, 1).pos(2);
+    z1(i) = data.dpls(i, 1).pos(3);
 end
 
 scatter3(x1, y1, z1)
@@ -29,22 +29,22 @@ axis equal
 
 figure
 
-x2 = [];
-y2 = [];
-z2 = [];
+x2 = zeros(1, N);
+y2 = zeros(1, N);
+z2 = zeros(1, N);
 
-mx2 = [];
-my2 = [];
-mz2 = [];
+mx2 = zeros(1, N);
+my2 = zeros(1, N);
+mz2 = zeros(1, N);
 
 for i = 1:N
-    x2 = [x2, data.dpls(i, nit).pos(1)];
-    y2 = [y2, data.dpls(i, nit).pos(2)];
-    z2 = [z2, data.dpls(i, nit).pos(3)];
+    x2(i) = data.dpls(i, nit).pos(1);
+    y2(i) = data.dpls(i, nit).pos(2);
+    z2(i) = data.dpls(i, nit).pos(3);
     
-    mx2 = [mx2, data.dpls(i, nit).ori(1)];
-    my2 = [my2, data.dpls(i, nit).ori(2)];
-    mz2 = [mz2, data.dpls(i, nit).ori(3)];
+    mx2(i) = data.dpls(i, nit).ori(1);
+    my2(i) = data.dpls(i, nit).ori(2);
+    mz2(i) = data.dpls(i, nit).ori(3);
 end
 
 scatter3(x2, y2, z2)
@@ -56,8 +56,8 @@ axis equal
 
 figure
 
-Ds = [];
-Bs = [];
+Ds = zeros(1, length(ts));
+Bs = zeros(1, length(ts));
 
 for i = 1:length(ts)
     wt = World;
@@ -68,8 +68,8 @@ for i = 1:length(ts)
     for j = 1:N
         BE = BE + wt.B_dpl_U(wt.dpls(j), w.B);
     end
-    Bs = [Bs, BE];
-    Ds = [Ds, wt.net_dpl_U()];
+    Bs(i) = BE;
+    Ds(i) = wt.net_dpl_U();
 end
 
 subplot(2, 1, 1)
@@ -85,23 +85,23 @@ for j = 1:100:length(ts)
     wt = World;
     wt.dpls = data.dpls(:, j);
     
-    xs = [];
-    ys = [];
-    zs = [];
+    xs = zeros(1, N);
+    ys = zeros(1, N);
+    zs = zeros(1, N);
     for i = 1:N
-        xs = [xs, wt.dpls(i).pos(1)];
-        ys = [ys, wt.dpls(i).pos(2)];
-        zs = [zs, wt.dpls(i).pos(3)];
+        xs(i) = wt.dpls(i).pos(1);
+        ys(i) = wt.dpls(i).pos(2);
+        zs(i) = wt.dpls(i).pos(3);
     end
     
     figure(j);
     scatter3(xs, ys, zs);
 end
 
-Thetas1 = [];
-Thetas2 = [];
-Rs1 = [];
-Rs2 = [];
+Thetas1 = zeros(1, length(ts));
+Thetas2 = zeros(1, length(ts));
+Rs1 = zeros(1, length(ts));
+Rs2 = zeros(1, length(ts));
 
 r1 = data.dpls(1, 1).pos;
 r2 = data.dpls(14, 1).pos;
@@ -115,14 +115,14 @@ for i = 1:length(ts)
     theta1 = real(acosd(cosTheta1));
     theta2 = real(acosd(cosTheta2));
     
-    Thetas1 = [Thetas1, theta1];
-    Thetas2 = [Thetas2, theta2];
+    Thetas1(i) = theta1;
+    Thetas2(i) = theta2;
     
     R1 = sqrt(sum(r1.^2, 'all'));
     R2 = sqrt(sum(r2.^2, 'all'));
     
-    Rs1 = [Rs1, R1];
-    Rs2 = [Rs2, R2];
+    Rs1(i) = R1;
+    Rs2(i) = R2;
 end
 
 figure
