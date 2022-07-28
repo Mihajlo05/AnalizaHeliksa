@@ -2,9 +2,10 @@ w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 4000;
+nit = 20000;
+last_nit = 1;
 
-data = w.simulate(0.04, nit);
+[data, lastIt] = w.simulate(0.02, nit);
 ts = data.time;
 
 figure
@@ -38,13 +39,13 @@ my2 = zeros(1, N);
 mz2 = zeros(1, N);
 
 for i = 1:N
-    x2(i) = data.dpls(i, nit).pos(1);
-    y2(i) = data.dpls(i, nit).pos(2);
-    z2(i) = data.dpls(i, nit).pos(3);
+    x2(i) = data.dpls(i, lastIt).pos(1);
+    y2(i) = data.dpls(i, lastIt).pos(2);
+    z2(i) = data.dpls(i, lastIt).pos(3);
     
-    mx2(i) = data.dpls(i, nit).ori(1);
-    my2(i) = data.dpls(i, nit).ori(2);
-    mz2(i) = data.dpls(i, nit).ori(3);
+    mx2(i) = data.dpls(i, lastIt).ori(1);
+    my2(i) = data.dpls(i, lastIt).ori(2);
+    mz2(i) = data.dpls(i, lastIt).ori(3);
 end
 
 scatter3(x2, y2, z2)
@@ -56,10 +57,10 @@ axis equal
 
 figure
 
-Ds = zeros(1, length(ts));
-Bs = zeros(1, length(ts));
+Ds = zeros(1, lastIt);
+Bs = zeros(1, lastIt);
 
-for i = 1:length(ts)
+for i = 1:lastIt
     wt = World;
     wt.dpls = data.dpls(:, i);
     
@@ -81,32 +82,32 @@ figure;
 quiver3(x2-0.5*mx2,y2-0.5*my2,z2-0.5*mz2,mx2,my2,mz2,0.5,'LineWidth',2);
 axis equal;
 
-for j = 1:100:length(ts)
-    wt = World;
-    wt.dpls = data.dpls(:, j);
-    
-    xs = zeros(1, N);
-    ys = zeros(1, N);
-    zs = zeros(1, N);
-    for i = 1:N
-        xs(i) = wt.dpls(i).pos(1);
-        ys(i) = wt.dpls(i).pos(2);
-        zs(i) = wt.dpls(i).pos(3);
-    end
-    
-    figure(j);
-    scatter3(xs, ys, zs);
-end
+%for j = 1:100:length(ts)
+%    wt = World;
+%    wt.dpls = data.dpls(:, j);
+%    
+%    xs = zeros(1, N);
+%    ys = zeros(1, N);
+%    zs = zeros(1, N);
+%    for i = 1:N
+%        xs(i) = wt.dpls(i).pos(1);
+%        ys(i) = wt.dpls(i).pos(2);
+%        zs(i) = wt.dpls(i).pos(3);
+%    end
+%    
+%    figure(j);
+%    scatter3(xs, ys, zs);
+%end
 
-Thetas1 = zeros(1, length(ts));
-Thetas2 = zeros(1, length(ts));
-Rs1 = zeros(1, length(ts));
-Rs2 = zeros(1, length(ts));
+Thetas1 = zeros(1, lastIt);
+Thetas2 = zeros(1, lastIt);
+Rs1 = zeros(1, lastIt);
+Rs2 = zeros(1, lastIt);
 
 r1 = data.dpls(1, 1).pos;
 r2 = data.dpls(14, 1).pos;
 
-for i = 1:length(ts)
+for i = 1:lastIt
     r3 = data.dpls(1, i).pos;
     r4 = data.dpls(14, i).pos;
     

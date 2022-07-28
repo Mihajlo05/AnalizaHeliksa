@@ -252,7 +252,7 @@ classdef World
             this = obj;
         end
         
-        function data = simulate(obj, dt, n)
+        function [data, lastIt] = simulate(obj, dt, n)
             [accs, ang_accs] = obj.calc_forces();
             
             for i = 1:length(obj.dpls)
@@ -278,9 +278,12 @@ classdef World
             data.time = zeros(1, n);
             data.time(1) = obj.time;
             
+            lastE = obj.net_dpl_U();
+            curE = lastE;
+            
             for i = 1:n
                 
-                if mod(i, 100) == 0
+                if mod(i, 200) == 0
                     disp("iter: " + string(i) + "; " + string(ceil(i/n*100)) + "%");
                 end
                 
@@ -290,6 +293,24 @@ classdef World
                     data.dpls(j, i+1) = obj.dpls(j);
                 end
                 data.time(i+1) = obj.time;
+                
+                if mod(i, 50) == 0
+                    disp("energy check no " + string(i/50));
+                    curE = obj.net_dpl_U();
+                    if abs(curE - lastE) < 0.0003
+                        lastIt = i;
+                        break;
+                    end
+                    lastE = curE;
+                end
+                
+                if i == n
+                    lastIt = n+1;
+                end
+            end
+            
+            if lastIt ~= n
+                data.time(lastIt+1:n) = [];
             end
             
             data.dpl_r = obj.dpl_r;
