@@ -56,6 +56,10 @@ zlabel('z')
 axis equal
 
 figure
+quiver3(x2-0.5*mx2,y2-0.5*my2,z2-0.5*mz2,mx2,my2,mz2,0.5,'LineWidth',2)
+axis equal
+
+figure
 
 Ds = zeros(1, lastIt);
 Bs = zeros(1, lastIt);
@@ -69,18 +73,15 @@ for i = 1:lastIt
     for j = 1:N
         BE = BE + wt.B_dpl_U(wt.dpls(j), w.B);
     end
-    Bs(i) = BE;
+    
     Ds(i) = wt.net_dpl_U();
+    Bs(i) = BE;
 end
 
 subplot(2, 1, 1)
 plot(ts, Ds)
 subplot(2, 1, 2)
 plot(ts, Bs)
-
-figure;
-quiver3(x2-0.5*mx2,y2-0.5*my2,z2-0.5*mz2,mx2,my2,mz2,0.5,'LineWidth',2);
-axis equal;
 
 %for j = 1:100:length(ts)
 %    wt = World;
@@ -132,8 +133,39 @@ plot(ts, Thetas1)
 plot(ts, Thetas2)
 grid on
 
+title("Zavisnost rotacije prstena od vremena")
+xlabel("Vreme")
+ylabel("Rotacija")
+
 figure
 hold on
 plot(ts, Rs1)
 plot(ts, Rs2)
 grid on
+
+figure(4)
+subplot(2, 1, 1)
+title("Zavisnost potencijalne energije dipol-dipol interakcije od vremena")
+xlabel("Vreme")
+ylabel("Energija")
+subplot(2, 1, 2)
+title("Zavisnost potencijalne energije interakcije sa magnetnim poljem od vremena")
+xlabel("Vreme")
+ylabel("Energija")
+
+MZs = zeros(1, lastIt);
+
+for i = 1:lastIt
+    mz = 0;
+    for j = 1:data.n_dpls
+        mz = mz + data.dpls(j, i).ori(3);
+    end
+    MZs(i) = mz/data.n_dpls;
+end
+
+figure
+plot(ts, MZs);
+grid on;
+title("Grafik zavisnost Z komponente dipolnog momenta od vremena")
+xlabel("vreme")
+ylabel("Z komponenta dipolnog momenta")

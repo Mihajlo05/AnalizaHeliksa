@@ -295,7 +295,6 @@ classdef World
                 data.time(i+1) = obj.time;
                 
                 if mod(i, 50) == 0
-                    disp("energy check no " + string(i/50));
                     curE = obj.net_dpl_U();
                     if abs(curE - lastE) < 0.0003
                         lastIt = i;
