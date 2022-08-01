@@ -35,7 +35,7 @@ classdef World
             d = dpl1.pos - dpl2.pos;
             r = sqrt(sum(d.^2, 'all'));
             
-            sigma = 1.8*obj.dpl_r;
+            sigma = 2*obj.dpl_r;
             
             if r >= (2^(1/6))*sigma
                 r = (2^(1/6))*sigma;
@@ -114,7 +114,7 @@ classdef World
             dist = sqrt(sum(r.^2, 'all'));
             dir = r / dist;
             
-            sigma = 1.8*obj.dpl_r;
+            sigma = 2*obj.dpl_r;
             
             if dist < (2^(1/6))*sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
