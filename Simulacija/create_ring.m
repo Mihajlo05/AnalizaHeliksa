@@ -1,5 +1,5 @@
 function dpls = create_ring(N, alpha, pos)
-    dpls(1:N) = Dipole;
+    dpls(1:N, 1) = Dipole;
     
     R = 1 / (2*sin(pi/2));
     
