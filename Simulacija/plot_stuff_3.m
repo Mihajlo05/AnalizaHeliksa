@@ -2,7 +2,7 @@ w.B = [0 0 B];
 
 N = length(w.dpls);
 
-nit = 30000;
+nit = 1000;
 last_nit = 1;
 [data, lastIt] = w.simulate(0.01, nit);
 ts = data.time;
@@ -82,54 +82,64 @@ plot(ts, Ds)
 subplot(2, 1, 2)
 plot(ts, Bs)
 
-for j = 1:500:length(ts)
-    wt = World;
-    wt.dpls = data.dpls(:, j);
-    
-    xs = zeros(1, N);
-    ys = zeros(1, N);
-    zs = zeros(1, N);
-    for i = 1:N
-        xs(i) = wt.dpls(i).pos(1);
-        ys(i) = wt.dpls(i).pos(2);
-        zs(i) = wt.dpls(i).pos(3);
-    end
-    
-    figure(j);
-    scatter3(xs, ys, zs);
-end
+%for j = 1:500:length(ts)
+%    wt = World;
+%    wt.dpls = data.dpls(:, j);
+%    
+%    xs = zeros(1, N);
+%    ys = zeros(1, N);
+%    zs = zeros(1, N);
+%    for i = 1:N
+%        xs(i) = wt.dpls(i).pos(1);
+%        ys(i) = wt.dpls(i).pos(2);
+%        zs(i) = wt.dpls(i).pos(3);
+%    end
+%    
+%    figure(j);
+%    scatter3(xs, ys, zs);
+%end
 
 Thetas1 = zeros(1, lastIt);
 Thetas2 = zeros(1, lastIt);
+Thetas3 = zeros(1, lastIt);
 Rs1 = zeros(1, lastIt);
 Rs2 = zeros(1, lastIt);
+Rs3 = zeros(1, lastIt);
 
 r1 = data.dpls(1, 1).pos;
 r2 = data.dpls(14, 1).pos;
+r3 = data.dpls(21, 1).pos;
 
 for i = 1:lastIt
     r3 = data.dpls(1, i).pos;
     r4 = data.dpls(14, i).pos;
+    r5 = data.dpls(21, i).pos;
     
     cosTheta1 = max(min(dot(r1,r3)/(norm(r1)*norm(r3)),1),-1);
     cosTheta2 = max(min(dot(r2,r4)/(norm(r2)*norm(r4)),1),-1);
+    cosTheta3 = max(min(dot(r3, r5)/(norm(r3)*norm(r5)), 1), -1);
     theta1 = real(acosd(cosTheta1));
     theta2 = real(acosd(cosTheta2));
+    theta3 = real(acosd(cosTheta3));
     
     Thetas1(i) = theta1;
     Thetas2(i) = theta2;
+    Thetas3(i) = theta3;
     
     R1 = sqrt(sum(r3.^2, 'all'));
     R2 = sqrt(sum(r4.^2, 'all'));
+    R3 = sqrt(sum(r5.^2, 'all'));
     
     Rs1(i) = R1;
     Rs2(i) = R2;
+    Rs3(i) = R3;
 end
 
 figure
 hold on
 plot(ts, Thetas1)
 plot(ts, Thetas2)
+plot(ts, Thetas3);
 grid on
 
 title("Zavisnost rotacije prstena od vremena")
@@ -140,6 +150,11 @@ figure
 hold on
 plot(ts, Rs1)
 plot(ts, Rs2)
+plot(ts, Rs3)
+
+title("Zavisnost poluprečnika prstena od vremena")
+xlabel("Vreme")
+ylabel("Rotacija")
 grid on
 
 figure(4)

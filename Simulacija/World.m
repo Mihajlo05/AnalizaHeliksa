@@ -294,14 +294,14 @@ classdef World
                 end
                 data.time(i+1) = obj.time;
                 
-                %if mod(i, 50) == 0
-                %    curE = obj.net_dpl_U();
-                %    if abs(curE - lastE) < -0.9999
-                %        lastIt = i;
-                %        break;
-                %    end
-                %    lastE = curE;
-                %end
+                if mod(i, 50) == 0
+                    curE = obj.net_dpl_U();
+                    if abs(curE - lastE) < 0.0003
+                        lastIt = i;
+                        break;
+                    end
+                    lastE = curE;
+                end
                 
                 if i == n
                     lastIt = n+1;
