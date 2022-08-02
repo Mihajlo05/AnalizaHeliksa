@@ -37,8 +37,8 @@ classdef World
             
             sigma = 2*obj.dpl_r;
             
-            if r >= (2^(1/6))*sigma
-                r = (2^(1/6))*sigma;
+            if r >= sigma
+                r = sigma;
             end
                 U = 4*obj.e*((sigma/r)^12 - (sigma/r)^6);
         end
@@ -116,7 +116,7 @@ classdef World
             
             sigma = 2*obj.dpl_r;
             
-            if dist < (2^(1/6))*sigma
+            if dist < sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
                 force1 = -F*dir;
                 force2 = F*dir;
@@ -317,6 +317,7 @@ classdef World
             data.dpl_moment = obj.dpl_moment;
             data.dpl_mass = obj.dpl_mass;
             data.e = obj.e;
+            data.B = obj.B;
         end
     end
 end
