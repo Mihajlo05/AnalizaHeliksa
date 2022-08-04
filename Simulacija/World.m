@@ -278,8 +278,8 @@ classdef World
             data.time = zeros(1, n);
             data.time(1) = obj.time;
             
-            lastE = obj.net_dpl_U();
-            curE = lastE;
+            %lastE = obj.net_dpl_U();
+            %curE = lastE;
             
             for i = 1:n
                 
@@ -294,14 +294,14 @@ classdef World
                 end
                 data.time(i+1) = obj.time;
                 
-                if mod(i, 50) == 0
-                    curE = obj.net_dpl_U();
-                    if abs(curE - lastE) < 0.0003
-                        lastIt = i;
-                        break;
-                    end
-                    lastE = curE;
-                end
+                %if mod(i, 50) == 0
+                %    curE = obj.net_dpl_U();
+                %    if abs(curE - lastE) < 0.0003
+                %        lastIt = i;
+                %        break;
+                %    end
+                %    lastE = curE;
+                %end
                 
                 if i == n
                     lastIt = n+1;
