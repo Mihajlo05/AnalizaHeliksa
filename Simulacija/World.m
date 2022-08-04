@@ -37,7 +37,7 @@ classdef World
             
             sigma = 2*obj.dpl_r;
             
-            if r >= sigma
+            if r >= (2^(1/6))*sigma
                 r = sigma;
             end
                 U = 4*obj.e*((sigma/r)^12 - (sigma/r)^6);
@@ -116,7 +116,7 @@ classdef World
             
             sigma = 2*obj.dpl_r;
             
-            if dist < sigma
+            if dist < (2^(1/6))*sigma
                 F = 4*obj.e*( 12*(sigma^12)/dist^13 - 6*(sigma^6)/dist^7);
                 force1 = -F*dir;
                 force2 = F*dir;
@@ -234,16 +234,16 @@ classdef World
                 acc = obj.dpls(i).acc;
                 vel = obj.dpls(i).vel;
                 
-                obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
-                %obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
+                %obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
+                obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
                 obj.dpls(i).acc = new_acc;
                 
                 new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
                 aacc = obj.dpls(i).ang_acc;
                 avel = obj.dpls(i).ang_vel;
                 
-                obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
-                %obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
+                %obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
+                obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
                 obj.dpls(i).ang_acc = new_aacc;
             end
             
