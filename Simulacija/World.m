@@ -232,18 +232,18 @@ classdef World
             for i = 1:n
                 new_acc = [new_accs(i, 1), new_accs(i, 2), new_accs(i, 3)];
                 acc = obj.dpls(i).acc;
-                %vel = obj.dpls(i).vel;
+                vel = obj.dpls(i).vel;
                 
-                %obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
-                obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
+                obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
+                %obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
                 obj.dpls(i).acc = new_acc;
                 
                 new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
                 aacc = obj.dpls(i).ang_acc;
-                %avel = obj.dpls(i).ang_vel;
+                avel = obj.dpls(i).ang_vel;
                 
-                %obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
-                obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
+                obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
+                %obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
                 obj.dpls(i).ang_acc = new_aacc;
             end
             
