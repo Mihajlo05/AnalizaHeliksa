@@ -8,8 +8,8 @@ function [B_energies] = plot_energy_time(data)
         wt.dpls = data.dpls(:, i);
         wt.B = data.B;
         
-        dpl_energies(i) = wt.net_dpl_U();
-        B_energies(i) = wt.net_B_U();
+        dpl_energies(i) = wt.net_dpl_U() / data.n_dpls;
+        B_energies(i) = wt.net_B_U() / data.n_dpls;
     end
     
     figure;
