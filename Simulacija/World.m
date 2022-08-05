@@ -14,6 +14,8 @@ classdef World
         e = 1 %depth of the potential well in lennard-jones potential
         
         mu0 = 1.25663706 %permeability of free space
+        
+        ni = 1 %viscosity
     end
     
     methods
@@ -169,6 +171,14 @@ classdef World
             torque2 = obj.B_dpl_torque(dpl2, B1);
         end
         
+        function force = drag_force(obj, dpl)
+            force = -6*pi*obj.ni*obj.dpl_r*dpl.vel;
+        end
+        
+        function torque = drag_torque(obj, dpl)
+            torque = -8*pi*obj.ni*(obj.dpl_r^3)*dpl.ang_vel;
+        end
+        
         function [new_accs, new_ang_accs] = calc_forces(obj)
             n = length(obj.dpls);
             
@@ -178,8 +188,15 @@ classdef World
             for i = 1:n
                 bt = obj.B_dpl_torque(obj.dpls(i), obj.B);
                 
+                df = obj.drag_force(obj.dpls(i));
+                dt = obj.drag_torque(obj.dpls(i));
+                
                 for k = 1:3
-                    new_ang_accs(i, k) = new_ang_accs(i, k) + bt(k)/obj.get_dpl_I();
+                    Fk = df(k);
+                    new_accs(i, k) = new_accs(i, k) + Fk/obj.dpl_mass;
+                    
+                    Tk = bt(k) + dt(k);
+                    new_ang_accs(i, k) = new_ang_accs(i, k) + Tk/obj.get_dpl_I();
                 end
                 
                 for j = (i+1):n
@@ -234,16 +251,14 @@ classdef World
                 acc = obj.dpls(i).acc;
                 vel = obj.dpls(i).vel;
                 
-                %obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
-                obj.dpls(i).vel = 0.5*(acc + new_acc)*dt;
+                obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
                 obj.dpls(i).acc = new_acc;
                 
                 new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
                 aacc = obj.dpls(i).ang_acc;
                 avel = obj.dpls(i).ang_vel;
                 
-                %obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
-                obj.dpls(i).ang_vel = 0.5*(aacc + new_aacc)*dt;
+                obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
                 obj.dpls(i).ang_acc = new_aacc;
             end
             
