@@ -188,14 +188,8 @@ classdef World
             for i = 1:n
                 bt = obj.B_dpl_torque(obj.dpls(i), obj.B);
                 
-                df = obj.drag_force(obj.dpls(i));
-                dt = obj.drag_torque(obj.dpls(i));
-                
                 for k = 1:3
-                    Fk = df(k);
-                    new_accs(i, k) = new_accs(i, k) + Fk/obj.dpl_mass;
-                    
-                    Tk = bt(k) + dt(k);
+                    Tk = bt(k);
                     new_ang_accs(i, k) = new_ang_accs(i, k) + Tk/obj.get_dpl_I();
                 end
                 
@@ -251,14 +245,31 @@ classdef World
                 acc = obj.dpls(i).acc;
                 vel = obj.dpls(i).vel;
                 
-                obj.dpls(i).vel = vel + 0.5*(acc + new_acc)*dt;
-                obj.dpls(i).acc = new_acc;
+                new_vel = vel + 0.5*(acc + new_acc)*dt;
                 
                 new_aacc = [new_ang_accs(i, 1), new_ang_accs(i, 2), new_ang_accs(i, 3)];
                 aacc = obj.dpls(i).ang_acc;
                 avel = obj.dpls(i).ang_vel;
                 
-                obj.dpls(i).ang_vel = avel + 0.5*(aacc + new_aacc)*dt;
+                new_avel = avel + 0.5*(aacc + new_aacc)*dt;
+                
+                d = obj.dpls(i);
+                d.vel = new_vel;
+                d.ang_vel = new_avel;
+                
+                dragF = obj.drag_force(d);
+                dragT = obj.drag_torque(d);
+                
+                new_acc = new_acc + dragF/obj.dpl_mass;
+                new_aacc = new_aacc + dragT/obj.get_dpl_I();
+                
+                new_vel = vel + 0.5*(acc + new_acc)*dt;
+                new_avel = avel + 0.5*(aacc + new_aacc)*dt;
+                
+                obj.dpls(i).vel = new_vel;
+                obj.dpls(i).ang_vel = new_avel;
+                
+                obj.dpls(i).acc = new_acc;
                 obj.dpls(i).ang_acc = new_aacc;
             end
             
