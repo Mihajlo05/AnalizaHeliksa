@@ -1,4 +1,4 @@
-function [B_energies] = plot_energy_time(data)
+function plot_energy_time(data)
     n = length(data.time);
     dpl_energies = zeros(1, n);
     B_energies = zeros(1, n);
