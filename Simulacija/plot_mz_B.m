@@ -1,4 +1,4 @@
-function plot_mz_B(BData)
+function plot_mz_B(BData, option)
     N = length(BData.Bs);
     MZs = zeros(1, N);
     
@@ -13,7 +13,7 @@ function plot_mz_B(BData)
         
         MZs(i) = mz / BData.n_dpls;
     end
-    plot(BData.Bs, MZs);
+    plot(BData.Bs, MZs, option);
     grid on;
     
     title("Zavisnost Z komponente dipolnog momenta od magnetne indukcije");
