@@ -1,4 +1,4 @@
-function plot_mz_time(data)
+function plot_mz_time(data, option)
     n = length(data.time);
     MZs = zeros(1, length(data.time));
     
@@ -14,9 +14,7 @@ function plot_mz_time(data)
         MZs(i) = mz / data.n_dpls;
     end
     
-    figure;
-    
-    plot(data.time, MZs);
+    plot(data.time, MZs, option);
     grid on;
     
     title("Zavisnost Z komponente dipolnog momenta od vremena");
