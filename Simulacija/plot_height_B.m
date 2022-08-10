@@ -9,9 +9,6 @@ function plot_height_B(BData)
         
         Hs(i) = abs(d2.pos(3) - d1.pos(3));
     end
-    
-    figure;
-    
     title("Zavisnost visine od magnetne indukcije");
     
     xlabel("Magnetna indukcija");

@@ -13,10 +13,6 @@ function plot_energy_B(BData)
         BEs(i) = wb.net_B_U() / (wb.B(3) * BData.n_dpls);
     end
     
-    figure;
-    grid on;
-    hold on;
-    
     title("Zavisnost potencijalne energije od magnetne indukcije");
     xlabel("Magnetna indukcija");
     ylabel("Energija");

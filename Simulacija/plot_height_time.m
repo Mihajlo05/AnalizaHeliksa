@@ -1,9 +1,9 @@
 function plot_height_time(data)
-    Hs = zeros(1, length(data.time));
+    Hs = zeros(1, (length(data.time)-1)/100);
     
-    for i = 1:length(data.time)
-        d1 = data.dpls(1, i);
-        d2 = data.dpls(data.n_dpls, i);
+    for i = 1:(length(data.time)-1)/100
+        d1 = data.dpls(1, i*100);
+        d2 = data.dpls(data.n_dpls, i*100);
         
         Hs(i) = abs(d2.pos(3) - d1.pos(3));
     end
@@ -11,7 +11,7 @@ function plot_height_time(data)
     figure;
     grid on;
     
-    plot(data.time, Hs);
+    plot(1:100:length(data.time)-1, Hs);
     
     title("Zavisnost visine od vremena");
     xlabel("Vreme");

@@ -13,9 +13,6 @@ function plot_mz_B(BData)
         
         MZs(i) = mz / BData.n_dpls;
     end
-    
-    figure;
-    
     plot(BData.Bs, MZs);
     grid on;
     

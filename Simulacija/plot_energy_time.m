@@ -1,11 +1,11 @@
 function plot_energy_time(data)
-    n = length(data.time);
-    dpl_energies = zeros(1, n);
-    B_energies = zeros(1, n);
+    n = length(data.time) - 1;
+    dpl_energies = zeros(1, n/100);
+    B_energies = zeros(1, n/100);
     
-    for i = 1:n
+    for i = 1:(n/100)
         wt = World;
-        wt.dpls = data.dpls(:, i);
+        wt.dpls = data.dpls(:, i*100);
         wt.B = data.B;
         
         dpl_energies(i) = wt.net_dpl_U() / data.n_dpls;
@@ -15,7 +15,7 @@ function plot_energy_time(data)
     figure;
     subplot(2, 1, 1);
     
-    plot(data.time, dpl_energies);
+    plot(1:100:n, dpl_energies);
     grid on;
     
     title("Zavisnost energije dipol-dipol interakcije od vremena");
@@ -24,7 +24,7 @@ function plot_energy_time(data)
     
     subplot(2, 1, 2);
     
-    plot(data.time, B_energies);
+    plot(1:100:n, B_energies);
     grid on;
     
     title("Zavisnost energije interakcije sa magnetnim poljem od vremena");
