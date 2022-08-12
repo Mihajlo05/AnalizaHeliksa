@@ -1,14 +1,17 @@
 function plot_energyd_time(data, option)
     n = length(data.time) - 1;
-    dpl_energies = zeros(1, n/100);
-    ts = zeros(1, n/100);
     
-    for i = 1:(n/100)
+    c = 10;
+    
+    dpl_energies = zeros(1, n/c);
+    ts = zeros(1, n/c);
+    
+    for i = 1:(n/c)
         wt = World;
-        wt.dpls = data.dpls(:, i*100);
+        wt.dpls = data.dpls(:, i*c);
         wt.B = data.B;
         
-        ts(i) = data.time(i*100);
+        ts(i) = data.time(i*c);
         
         dpl_energies(i) = wt.net_dpl_U() / data.n_dpls;
     end

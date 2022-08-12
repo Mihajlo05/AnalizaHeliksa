@@ -8,7 +8,7 @@ function plot_energyb_B(BData, option)
         wb.dpls = BData.dpls(:, i);
         wb.B = [0 0 BData.Bs(i)];
         
-        BEs(i) = wb.net_B_U() / (wb.B(3) * BData.n_dpls);
+        BEs(i) = wb.net_B_U() / (BData.n_dpls);
     end
     
     title("Zavisnost potencijalne energije interakcije sa magnetnim poljem od magnetne indukcije");
