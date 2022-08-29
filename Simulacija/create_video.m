@@ -1,7 +1,7 @@
 function create_video(data)
     N = length(data.time);
     
-    for i = 1000:100:3000
+    for i = 1000:100:N
         figure(i);
         axis equal;
         grid on;
