@@ -1,4 +1,4 @@
-function plot_mz_B(BData, option)
+function MZs = plot_mz_B(BData, option)
     N = length(BData.Bs);
     MZs = zeros(1, N);
     
