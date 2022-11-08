@@ -6,7 +6,7 @@ function plot_slopes(slopes)
     s = ['ks--', 'kV--', 'ks-'];
     
     for i = 1:3
-        plot(slopes(i).N, slopes(i).k, s(i));
+        plot(slopes(i).N, slopes(i).k);
     end
     
     xlabel("N");
