@@ -1,5 +1,5 @@
 function plot_rings()
-    name = 'BData2A';
+    name = 'BDatar';
     
     figure(1);
     hold on;
@@ -8,7 +8,7 @@ function plot_rings()
     figure(3);
     hold on;
     
-    for i = 4:8
+    for i = 4:10
         load(name + string(i) + '.mat');
         
         figure(1);
